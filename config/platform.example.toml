@@ -1,0 +1,19 @@
+# Use gpu-platform init to generate a real per-user configuration and token.
+state_dir = "~/.local/state/gpu-platform"
+socket = "/run/user/1013/gpu-platform/runner.sock"
+gpu_uuids = ["GPU-0fb4b2c7-a39e-2032-c5c9-3eabf97816ba"]
+api_uid = 1013
+system_mode = false
+host = "127.0.0.1"
+# lan_host = "10.249.41.63"  # Optional second listener on the lab interface.
+port = 8765
+
+jupyter_idle_seconds = 1800
+shared_limit = 2
+shared_headroom_mib = 2048
+
+[users]
+# linux_user = "<sha256 hex digest of that user's random API token>"
+
+[interpreters]
+# linux_user = "/absolute/path/to/conda/env/bin/python"

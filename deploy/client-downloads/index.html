@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>安装客户端 · 算研工作台</title>
+<style>
+:root{font-family:Inter,"Noto Sans CJK SC",system-ui,sans-serif;color:#162e2a;background:#f4f7f5;line-height:1.6}
+main{max-width:54rem;margin:auto;padding:2rem 1rem 3rem}
+h1,h2{line-height:1.25}h1{margin:.8rem 0}h2{font-size:1.22rem;margin:0}
+section{padding:1.25rem 1.4rem;margin:1rem 0;background:white;border:1px solid #d9e1df;border-radius:10px}
+p{margin:.7rem 0}a{color:#205e4c;text-underline-offset:.2rem}
+pre{overflow:auto;background:#eef3f0;padding:.85rem 1rem;border-radius:6px;font-size:.88rem;line-height:1.65}
+code{font-family:"IBM Plex Mono",monospace}header a{font-size:.87rem}
+</style>
+<main>
+<header><a href="../">返回工作台</a><h1>安装客户端</h1>
+<p>按使用方式选择一个入口。CLI 和 MCP 需要 Python 3.10 或更高版本，以及可安装第三方依赖的 pip 环境。先将所选文件下载到同一个目录，在该目录打开终端。以下安装命令适用于 Linux 和 macOS。</p></header>
+<section><h2>服务器内网下载</h2>
+<p>可访问实验室网络时，在安装客户端的电脑上从 <a href="@platform-url@/downloads/">@platform-url@/downloads/</a> 取包。也可以点击下面各组件的下载链接，通过已打开的工作台保存文件。</p>
+<pre><code>gpu_server=@platform-shell@
+# CLI 用第一个 wheel，MCP 用两个 wheel，Skill 用最后一个文件。
+curl -fSLO "$gpu_server/downloads/@gpu-platform-client@"
+curl -fSLO "$gpu_server/downloads/@gpu-platform-mcp@"
+curl -fSLO "$gpu_server/downloads/SKILL.md"</code></pre></section>
+<section><h2>CLI · 在终端操作</h2>
+<p>下载 CLI 安装包，在运行命令的电脑上安装。</p>
+<pre><code>python3 -m venv "$HOME/.local/share/gpu-workbench/venv"
+. "$HOME/.local/share/gpu-workbench/venv/bin/activate"
+python -m pip install "./@gpu-platform-client@"
+gpu-jobs --help</code></pre>
+<a download href="@gpu-platform-client@">下载 CLI 安装包</a></section>
+<section><h2>MCP · 让 Agent 调用工作台</h2>
+<p>在运行 MCP 客户端的电脑上安装 MCP 和它使用的共享客户端库。完成安装后，按下方「连接自己的账号」注册到 Codex。</p>
+<pre><code>python3 -m venv "$HOME/.local/share/gpu-workbench/venv"
+. "$HOME/.local/share/gpu-workbench/venv/bin/activate"
+python -m pip install "./@gpu-platform-client@" "./@gpu-platform-mcp@"</code></pre>
+<p>其他 MCP 客户端选择 stdio，启动命令填上面环境中 <code>gpu-platform-mcp</code> 的绝对路径，环境变量 <code>GPU_PLATFORM_URL</code> 填工作台地址。</p>
+<a download href="@gpu-platform-mcp@">下载 MCP 安装包</a> · <a download href="@gpu-platform-client@">下载共享客户端库</a></section>
+<section><h2>Skill · 给 Agent 添加 GPU 作业规则</h2>
+<p>如果 Agent 已连接工作台 MCP，或已能从 PATH 调用 <code>gpu-jobs</code>，只需装这一个文件，再打开新的 Agent 会话。</p>
+<pre><code>mkdir -p "$HOME/.agents/skills/gpu-jobs"
+install -m 0644 ./SKILL.md "$HOME/.agents/skills/gpu-jobs/SKILL.md"</code></pre>
+<a download href="SKILL.md">下载 SKILL.md</a></section>
+<section><h2>通过 SSH 取包</h2>
+<p>如果安装客户端的电脑无法打开下载页，可使用平时登录 GPU 服务器的 SSH 主机别名。下面三行 scp 分别获取 CLI 包、MCP 包和 Skill，按需执行。MCP 需要两个 wheel。</p>
+<pre><code>printf 'GPU 服务器 SSH 登录目标（用户名@主机或别名）: '
+read -r gpu_host
+scp "${gpu_host}:/opt/gpu-platform/web/downloads/@gpu-platform-client@" .
+scp "${gpu_host}:/opt/gpu-platform/web/downloads/@gpu-platform-mcp@" .
+scp "${gpu_host}:/opt/gpu-platform/web/downloads/SKILL.md" .</code></pre></section>
+<section><h2>连接自己的账号</h2>
+<p>在实验室内网可直接使用下列服务器地址。使用 SSH 转发时，把这个变量改为运行客户端的电脑上已建立的转发入口。</p>
+<pre><code>export GPU_PLATFORM_URL=@platform-shell@
+gpu-jobs platform</code></pre>
+<p>使用 Codex 时，在已安装 MCP 的虚拟环境运行：</p>
+<pre><code>codex mcp add gpu-platform --env GPU_PLATFORM_URL="$GPU_PLATFORM_URL" -- "$VIRTUAL_ENV/bin/gpu-platform-mcp"</code></pre>
+<p>CLI 和 MCP 默认读取当前电脑上的 <code>~/.config/gpu-platform/access.token</code>。在 haigpu9 上登录自己的 Linux 账号即可使用已分配的令牌。在个人电脑上运行时，通过 SSH 将自己的令牌复制到同一路径并设为仅本人可读，或用 <code>GPU_PLATFORM_TOKEN_FILE</code> 指定已有凭据文件。</p>
+<p>提交任务的工作目录和解释器均填写服务器路径。</p></section>
+</main>

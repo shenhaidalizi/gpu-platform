@@ -1,0 +1,15 @@
+[Unit]
+Description=GPU platform API and local workbench
+Wants=gpu-platform-runner.service
+After=gpu-platform-runner.service
+
+[Service]
+Type=simple
+WorkingDirectory=%h/projects/gpu-platform
+ExecStart=%h/projects/gpu-platform/.venv/bin/gpu-platform serve
+Restart=on-failure
+RestartSec=2
+UMask=0077
+
+[Install]
+WantedBy=default.target

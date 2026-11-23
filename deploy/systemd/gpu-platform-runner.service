@@ -1,0 +1,13 @@
+[Unit]
+Description=GPU platform local runner
+
+[Service]
+Type=simple
+WorkingDirectory=%h/projects/gpu-platform
+ExecStart=%h/projects/gpu-platform/.venv/bin/gpu-platform-runner
+Restart=on-failure
+RestartSec=2
+UMask=0077
+
+[Install]
+WantedBy=default.target

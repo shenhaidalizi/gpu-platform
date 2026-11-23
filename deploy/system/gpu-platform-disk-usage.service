@@ -1,0 +1,18 @@
+[Unit]
+Description=Summarize disk space by file owner for the GPU workbench
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 -I /opt/gpu-platform/disk_owners.py
+User=root
+Group=gpu-platform-api
+StateDirectory=gpu-platform-disk-usage
+StateDirectoryMode=0750
+UMask=0027
+Nice=15
+IOSchedulingClass=idle
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateDevices=yes
+NoNewPrivileges=yes
+CapabilityBoundingSet=CAP_DAC_READ_SEARCH

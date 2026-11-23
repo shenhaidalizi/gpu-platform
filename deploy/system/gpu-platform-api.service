@@ -1,0 +1,20 @@
+[Unit]
+Description=GPU platform multi-user API
+Wants=gpu-platform-runner.service
+After=network-online.target gpu-platform-runner.service
+
+[Service]
+User=gpu-platform-api
+Group=gpu-platform-api
+Environment=GPU_PLATFORM_CONFIG=/etc/gpu-platform/config.toml
+Environment=GPU_PLATFORM_WEB_DIST=/opt/gpu-platform/web
+ExecStart=/opt/gpu-platform/venv/bin/gpu-platform serve
+StateDirectory=gpu-platform
+StateDirectoryMode=0700
+NoNewPrivileges=true
+UMask=0077
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

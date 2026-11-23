@@ -1,0 +1,9 @@
+[Unit]
+Description=Refresh disk space by file owner
+
+[Timer]
+OnBootSec=2min
+OnUnitInactiveSec=6h
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,16 @@
+[Unit]
+Description=GPU platform multi-user execution service
+After=gpu-reservation.service
+Wants=gpu-reservation.service
+
+[Service]
+Environment=GPU_PLATFORM_CONFIG=/etc/gpu-platform/config.toml
+ExecStart=/opt/gpu-platform/venv/bin/gpu-platform-runner
+RuntimeDirectory=gpu-platform
+RuntimeDirectoryMode=0711
+UMask=0077
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

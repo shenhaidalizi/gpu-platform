@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.egg-info/
+*.py[cod]
+.pytest_cache/
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+/web/public/downloads/
